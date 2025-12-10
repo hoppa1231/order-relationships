@@ -6,10 +6,22 @@
 #include <cctype>
 
 std::string string = "abcdefgh";
-std::string task = "b d g e c/f g h a";
+std::string task = "b d g e c/f g h a"; // TODO: change task to default_task
 std::unordered_map<char, std::string> base;
 std::unordered_map<char, std::string> I_base;
 std::vector<std::string> road = { "a" };
+
+// TODO: add function to create task from user input
+//       input: additive, multiplicative;
+//          example: "a", "b";
+//       output: task;
+//          example: "b d g e c/f g h a";
+
+// TODO: add function to edit task manually
+//       input: vertex, childs, parents=null;
+//          example: "d", ["b"], [];
+//       output: result;
+//          example: 0 for success, 1 for fail;
 
 void buildBase() {
     size_t i = 0;

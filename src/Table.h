@@ -1,10 +1,19 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <tuple>
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
+
+// forward declaration
+std::string alphabet(const std::unordered_map<char, std::string>& bs);
+
+
+// Forward declaration (defined in AddModule.h)
+std::string alphabet(const std::unordered_map<char, std::string>& bs);
+
 
 
 class Table {
@@ -17,11 +26,11 @@ private:
     std::vector<std::vector<std::string>> plusTable;
     std::vector<std::vector<std::string>> minusTable;
     std::vector<std::vector<std::string>> mulTable;
-    std::vector<std::vector<int>> answer; 
+    std::vector<std::vector<int>> answer;
 
 public:
     Table(const std::unordered_map<char, std::string>& base, const std::vector<std::string>& road)
-        : string("abcdefgh"), size(8), base(base), road(road), lenRoad(road.size()),
+        : string(alphabet(base)), size((int)alphabet(base).size()), base(base), road(road), lenRoad(road.size()),
         plusTable(size, std::vector<std::string>(size, "#")),
         minusTable(size, std::vector<std::string>(size, "#")),
         mulTable(size, std::vector<std::string>(size, "#")) {
@@ -33,7 +42,7 @@ public:
     std::string pomogi(const std::string& a, const std::string& b, char sign) {
         std::string answer = calc(a, b, sign);
         answer = replaceF(answer, "c", "c/f");
-        if (std::count(answer.begin(), answer.end(), ',') > size-1) {
+        if (std::count(answer.begin(), answer.end(), ',') > size - 1) {
             return "[ OVERFLOW ]";
         }
         return answer;
@@ -96,7 +105,7 @@ public:
         if (sign == '*' && a.find_first_not_of('a') == std::string::npos) {
             std::swap(a, b);
         }
-        return {a, b, static_cast<int>(a.size()), PorM, sign };
+        return { a, b, static_cast<int>(a.size()), PorM, sign };
     }
 
     int overflowF(const char& a, const char& b, char sign) {
@@ -149,7 +158,7 @@ public:
 
         for (int obj : {x, y}) {
             if (obj <= available) {
-                answer.push_back({obj, j});
+                answer.push_back({ obj, j });
             }
             else {
                 splitMul(obj, j, available);
@@ -205,11 +214,11 @@ public:
     void printTable(char type) const {
         std::vector<std::vector<std::string>> array2d;
         std::vector<std::string> line;
-        line.push_back(std::string (1, type));
-        for (int i=0 ; i < string.size() ; i++)
-            line.push_back(std::string (1, string[i]));
+        line.push_back(std::string(1, type));
+        for (int i = 0; i < string.size(); i++)
+            line.push_back(std::string(1, string[i]));
         array2d.push_back(line);
-        
+
         const auto& table = getTable(type);
         for (size_t indx = 0; indx < table.size(); ++indx) {
             std::vector<std::string> line = { std::string(1, string[indx]) };
@@ -291,12 +300,12 @@ public:
     }
 
     std::string replaceF(const std::string& text, const std::string& str1, const std::string& str2) {
-        std::string result = text;  
+        std::string result = text;
         size_t pos = 0;
 
         while ((pos = result.find(str1, pos)) != std::string::npos) {
             result.replace(pos, str1.length(), str2);
-            pos += str2.length(); 
+            pos += str2.length();
         }
 
         return result;
@@ -306,7 +315,7 @@ public:
         return replaceF(replaceF(replaceF(s, "c/f", "c"), ",", ""), "-", "");
     }
     std::string minusFunc(const std::string& x, const std::string& y) {
-        return normalFormat( calc(x, y, '-') );
+        return normalFormat(calc(x, y, '-'));
     }
 
     std::pair<std::string, std::string> div(const std::string& a, const std::string& b) {
@@ -333,7 +342,7 @@ public:
         if (std::count(aCopy.begin(), aCopy.end(), 'a') == aCopy.size()) {
             return { "a", "a" };
         }
-        
+
         if (!altA == altB && comp == ">") {
             while (std::get<2>(comparison(res, bNorm)) != "<") {
                 res = minusFunc(res, bNorm);
@@ -342,9 +351,9 @@ public:
             if (res.empty()) {
                 return { count, "a" };
             }
-            return { "-" + count, res};
+            return { "-" + count, res };
         }
-        
+
 
         if (altA == altB) {
             if (comp == "<") {
@@ -442,18 +451,18 @@ public:
             std::string res = pair.second;
 
             // NUMBER DIV ZERO
-            
+
             if (std::count(a.begin(), a.end(), 'a') != a.size() &&
                 std::count(b.begin(), b.end(), 'a') == b.size()) {
                 return "empty";
             }
-            
+
             ;
             // ZERO DIV ZERO
             /*
             if (std::count(b.begin(), b.end(), 'a') == 8 &&
                 std::count(a.begin(), a.end(), 'a') == 8) {
-                return "[ Неопределенность ]";
+                return "[ ???????????????? ]";
             }
             */
 
@@ -496,12 +505,12 @@ public:
         int overflow = 0;
         std::string overflow_ = "a";
 
-        for (int i = n-1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; i--) {
             if (formattedSign == '*' && !justMul) {
                 std::string tempResult = calc(formattedA, std::string(1, formattedB[i]), '*');
                 if (tempResult.empty()) continue;
 
-                tempResult = normalFormat(tempResult) + repeat("a", n-i - 1);
+                tempResult = normalFormat(tempResult) + repeat("a", n - i - 1);
                 overflow_ = calc(tempResult, normalFormat(overflow_), '+');
                 continue;
             }
